@@ -11,19 +11,20 @@ model_groq = "groq/compound"
 model = ChatGroq(model_name=model_groq, temperature=1, streaming=True)
 db_conninfo = "postgresql+asyncpg://admin:admin@localhost/my_chainlit_db"
 
+
 @cl.set_chat_profiles
 async def chat_profile():
     return [
         cl.ChatProfile(
-            name="Teaching Mode",
-            markdown_description="The underlying LLM model is **GPT-3.5**.",
+            name="Concise Mode",
+            markdown_description="The model will respond with concise answers",
         ),
         cl.ChatProfile(
-            name="Quiz Mode",
-            markdown_description="The underlying LLM model is **GPT-4**.",
-            icon="https://picsum.photos/250",
+            name="Detailed Mode",
+            markdown_description="The model will respond with detailed explanations",
         ),
     ]
+
 
 @cl.password_auth_callback
 def auth_callback(username: str, password: str):
@@ -43,12 +44,15 @@ def get_data_layer():
 @cl.on_chat_start
 async def main():
     mode = cl.user_session.get("chat_profile")
-    if mode == "Teaching Mode":
-        intro = "In Teaching Mode, I will provide detailed explanations to help you understand various topics."
+
+    if mode == "Concise Mode":
+        intro = "In Concise Mode, I will provide brief and to-the-point answers."
+        template = "You are a helpful assistant that provides concise answers to users' questions."
+
+    elif mode == "Detailed Mode":
+        intro = "In Detailed Mode, I will provide detailed explanations to help you understand various topics."
         template = "You are a helpful assistant that provides detailed explanations to users' questions."
-    elif mode == "Quiz Mode":
-        intro = "In Quiz Mode, I will challenge you with tricky questions to test your knowledge."
-        template = "You are a quiz master that challenges users with tricky questions and no explanations or teaching is allowed, Only questions"
+
     await cl.Message(content=intro).send()
 
     cl.user_session.set(
@@ -57,7 +61,6 @@ async def main():
             {"role": "system", "content": template}
         ],
     )
-
 
 
 @cl.on_chat_resume
