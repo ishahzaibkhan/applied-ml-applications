@@ -2,13 +2,15 @@ from langchain_groq import ChatGroq
 from chainlit.data.sql_alchemy import SQLAlchemyDataLayer
 import chainlit as cl
 from chainlit.types import ThreadDict
+from chainlit.input_widget import TextInput
 
 model_gpt = "openai/gpt-oss-20b"
 model_qwen = "qwen/qwen3-32b"
 model_groq = "groq/compound"
+model_llama = "llama-3.1-8b-instant"
 
 
-model = ChatGroq(model_name=model_groq, temperature=1, streaming=True)
+model = ChatGroq(model_name=model_llama, temperature=1, streaming=True)
 db_conninfo = "postgresql+asyncpg://admin:admin@localhost/my_chainlit_db"
 
 
@@ -43,11 +45,12 @@ def get_data_layer():
 
 @cl.on_chat_start
 async def main():
+    
     mode = cl.user_session.get("chat_profile")
 
     if mode == "Concise Mode":
         intro = "In Concise Mode, I will provide brief and to-the-point answers."
-        template = "You are a helpful assistant that provides concise answers to users' questions."
+        template = "You are a helpful assistant that provides concise answers to users' queries 3-5 lines max."
 
     elif mode == "Detailed Mode":
         intro = "In Detailed Mode, I will provide detailed explanations to help you understand various topics."
