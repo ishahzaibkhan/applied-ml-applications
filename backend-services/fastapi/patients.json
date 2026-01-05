@@ -1,7 +1,7 @@
 {
   "P001": {
-    "name": "Ananya Verma",
-    "city": "Guwahati",
+    "name": "Ayesha Khan",
+    "city": "Karachi",
     "age": 28,
     "gender": "female",
     "height": 1.65,
@@ -10,8 +10,8 @@
     "verdict": "Obese"
   },
   "P002": {
-    "name": "Ravi Mehta",
-    "city": "Mumbai",
+    "name": "Muhammad Ali",
+    "city": "Lahore",
     "age": 35,
     "gender": "male",
     "height": 1.75,
@@ -20,8 +20,8 @@
     "verdict": "Overweight"
   },
   "P003": {
-    "name": "Sneha Kulkarni",
-    "city": "Pune",
+    "name": "Zainab Hussain",
+    "city": "Islamabad",
     "age": 22,
     "gender": "female",
     "height": 1.6,
@@ -30,8 +30,8 @@
     "verdict": "Underweight"
   },
   "P004": {
-    "name": "Arjun Verma",
-    "city": "Mumbai",
+    "name": "Bilal Ahmed",
+    "city": "Rawalpindi",
     "age": 40,
     "gender": "male",
     "height": 1.8,
@@ -40,8 +40,8 @@
     "verdict": "Normal"
   },
   "P005": {
-    "name": "Neha Sinha",
-    "city": "Kolkata",
+    "name": "Fatima Zahra",
+    "city": "Peshawar",
     "age": 30,
     "gender": "female",
     "height": 1.55,
