@@ -62,3 +62,15 @@ def sort_patients(sort_by: str = Query(..., description="Sort by height, weight,
     sorted_data = sorted(data.values(), key=lambda x: x.get(sort_by), reverse=sort_order)
     
     return sorted_data
+
+@app.post("/create")
+def create_patient(patient: Patient):
+    data = data_loader()
+
+    if patient.id in data:
+        raise HTTPException(status_code=400, detail=f"Patient with this ID already exists")
+    else:
+        data[patient.id] = patient.model_dump(exclude={"id"})
+        with open("patients.json", "w") as file:
+            json.dump(data, file)
+    return {"message": "Patient created successfully"}
