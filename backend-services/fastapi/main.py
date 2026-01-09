@@ -1,7 +1,19 @@
 from fastapi import FastAPI, Path, Query, HTTPException
 import json
+from pydantic import BaseModel, Field, computed_field
+from typing import Literal, Optional, Annotated
+
 app = FastAPI()
 
+class Patient(BaseModel):
+    id: Annotated[str, Field(description="Unique identifier for the patient", example="P001")]
+    name: Annotated[str, Field(description="Full name of the patient", example="Jabbar Khan")]
+    city: Annotated[str, Field(description="City of residence", example="Islamabad")]
+    age: Annotated[int, Field(description="Age of the patient", example=30)]
+    gender: Annotated[Literal["male", "female", "other"], Field(description="Gender of the patient", example="male")]
+    height: Annotated[float, Field(description="Height of the patient in centimeters", example=175.5)]
+    weight: Annotated[float, Field(description="Weight of the patient in kilograms", example=70.2)]
+# 
 
 def data_loader():
     with open("patients.json", "r") as file:
@@ -37,6 +49,7 @@ def view_patient(patient_id: str = Path(..., description="ID of the patient", ex
 @app.get("/sort")
 def sort_patients(sort_by: str = Query(..., description="Sort by height, weight, or bmi", example="height"), order: str = Query("ascending", description="Order of sorting: ascending or descending", example="ascending")):
     valid_fields = ["height", "weight", "bmi"]
+    
     if sort_by not in valid_fields:
         raise HTTPException(status_code=400, detail="Valid fields: height, weight, bmi")
     
@@ -47,4 +60,5 @@ def sort_patients(sort_by: str = Query(..., description="Sort by height, weight,
 
     sort_order = True if order == "descending" else False
     sorted_data = sorted(data.values(), key=lambda x: x.get(sort_by), reverse=sort_order)
+    
     return sorted_data
