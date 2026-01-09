@@ -6,7 +6,6 @@ from typing import Literal, Optional, Annotated
 app = FastAPI()
 
 class Patient(BaseModel):
-    id: Annotated[str, Field(description="Unique identifier for the patient", example="P001")]
     name: Annotated[str, Field(description="Full name of the patient", example="Jabbar Khan")]
     city: Annotated[str, Field(description="City of residence", example="Islamabad")]
     age: Annotated[int, Field(description="Age of the patient", example=30)]
@@ -14,6 +13,21 @@ class Patient(BaseModel):
     height: Annotated[float, Field(description="Height of the patient in centimeters", example=175.5)]
     weight: Annotated[float, Field(description="Weight of the patient in kilograms", example=70.2)]
 
+    @computed_field
+    @property
+    def id(self) -> str:
+        data = data_loader()
+        id = list(data.keys())[-1]
+        id_number = str.split(id, "P")[-1]
+        new_id_number = int(id_number) + 1
+        if new_id_number < 10:
+            new_id = "P00" + str(new_id_number)
+        elif 10 <= new_id_number < 100:
+            new_id = "P0" + str(new_id_number)
+        else:
+            new_id = "P" + str(new_id_number)
+        return new_id    
+    
     @computed_field
     @property
     def bmi(self) -> float:

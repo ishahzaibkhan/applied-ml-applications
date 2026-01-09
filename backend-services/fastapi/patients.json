@@ -58,5 +58,45 @@
     "weight": 40.2,
     "bmi": 14.68,
     "verdict": "Underweight"
+  },
+  "P007": {
+    "name": "AliKhan",
+    "city": "Islamabad",
+    "age": 40,
+    "gender": "male",
+    "height": 185.5,
+    "weight": 80.2,
+    "bmi": 23.31,
+    "verdict": "Normal weight"
+  },
+  "P008": {
+    "name": "Sara Malik",
+    "city": "Lahore",
+    "age": 32,
+    "gender": "female",
+    "height": 168.2,
+    "weight": 62.5,
+    "bmi": 22.09,
+    "verdict": "Normal weight"
+  },
+  "P009": {
+    "name": "Hamza Ahmed",
+    "city": "Karachi",
+    "age": 27,
+    "gender": "male",
+    "height": 175.0,
+    "weight": 70.8,
+    "bmi": 23.12,
+    "verdict": "Normal weight"
+  },
+  "P010": {
+    "name": "Fatima Noor",
+    "city": "Peshawar",
+    "age": 45,
+    "gender": "female",
+    "height": 160.4,
+    "weight": 68.9,
+    "bmi": 26.78,
+    "verdict": "Overweight"
   }
 }
