@@ -48,5 +48,15 @@
     "weight": 75,
     "bmi": 31.22,
     "verdict": "Obese"
+  },
+  "P006": {
+    "name": "Ahmad Nawaz",
+    "city": "Sadiqabad",
+    "age": 25,
+    "gender": "male",
+    "height": 165.5,
+    "weight": 40.2,
+    "bmi": 14.68,
+    "verdict": "Underweight"
   }
 }

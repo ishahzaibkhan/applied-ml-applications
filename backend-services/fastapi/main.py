@@ -13,7 +13,25 @@ class Patient(BaseModel):
     gender: Annotated[Literal["male", "female", "other"], Field(description="Gender of the patient", example="male")]
     height: Annotated[float, Field(description="Height of the patient in centimeters", example=175.5)]
     weight: Annotated[float, Field(description="Weight of the patient in kilograms", example=70.2)]
-# 
+
+    @computed_field
+    @property
+    def bmi(self) -> float:
+        bmi = self.weight / ((self.height / 100) ** 2)
+        return round(bmi, 2)
+    
+    @computed_field
+    @property
+    def verdict(self) -> str:
+        bmi = self.bmi
+        if bmi < 18.5:
+            return "Underweight"
+        elif 18.5 <= bmi < 24.9:
+            return "Normal weight"
+        elif 25 <= bmi < 29.9:
+            return "Overweight"
+        else:
+            return "Obese"
 
 def data_loader():
     with open("patients.json", "r") as file:
