@@ -6,13 +6,13 @@ from typing import Literal, Optional, Annotated
 app = FastAPI()
 
 class Patient(BaseModel):
-    name: Annotated[str, Field(description="Full name of the patient", example="Jabbar Khan")]
-    city: Annotated[str, Field(description="City of residence", example="Islamabad")]
-    age: Annotated[int, Field(description="Age of the patient", example=30)]
-    gender: Annotated[Literal["male", "female", "other"], Field(description="Gender of the patient", example="male")]
-    height: Annotated[float, Field(description="Height of the patient in centimeters", example=175.5)]
-    weight: Annotated[float, Field(description="Weight of the patient in kilograms", example=70.2)]
-
+    name: Annotated[str, Field(description="Full name of the patient", examples=["Jabbar Khan"])]
+    city: Annotated[str, Field(description="City of residence", examples=["Islamabad"])]
+    age: Annotated[int, Field(description="Age of the patient", examples=[30])]
+    gender: Annotated[Literal["male", "female", "other"], Field(description="Gender of the patient", examples=["male"])]
+    height: Annotated[float, Field(description="Height of the patient in centimeters", examples=[175.5])]
+    weight: Annotated[float, Field(description="Weight of the patient in kilograms", examples=[70.2])]
+    
     @computed_field
     @property
     def id(self) -> str:
@@ -20,6 +20,7 @@ class Patient(BaseModel):
         id = list(data.keys())[-1]
         id_number = str.split(id, "P")[-1]
         new_id_number = int(id_number) + 1
+
         if new_id_number < 10:
             new_id = "P00" + str(new_id_number)
         elif 10 <= new_id_number < 100:
@@ -52,6 +53,9 @@ def data_loader():
         data = json.load(file)
     return data
 
+def save_data(data):
+    with open("patients.json", "w") as file:
+        json.dump(data, file)
 
 @app.get("/")
 def intro():
@@ -66,7 +70,7 @@ def about():
 @app.get("/view")
 def view_patients():
     patients = data_loader()
-    return {"patients": patients}
+    return patients
 
 
 @app.get("/view/{patient_id}")
@@ -76,7 +80,6 @@ def view_patient(patient_id: str = Path(..., description="ID of the patient", ex
         return data[patient_id]
     else:
         raise HTTPException(status_code=404, detail="Patient not found")
-
 
 @app.get("/sort")
 def sort_patients(sort_by: str = Query(..., description="Sort by height, weight, or bmi", example="height"), order: str = Query("ascending", description="Order of sorting: ascending or descending", example="ascending")):
@@ -106,3 +109,17 @@ def create_patient(patient: Patient):
         with open("patients.json", "w") as file:
             json.dump(data, file)
     return {"message": "Patient created successfully"}
+
+
+@app.delete("/delete/{patient_id}")
+def delete_patient(patient_id:str = Path(..., description="ID of the patient to delete", example="P001")):
+    data = data_loader()
+    if patient_id not in data:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    
+    if patient_id in data:
+        del data[patient_id]
+        save_data(data)
+        return {"message": "Patient deleted successfully"}
+    else:
+        raise HTTPException(status_code=404, detail="Patient not found")
