@@ -1,34 +1,117 @@
 # Python
+*.py[cod]
+*$py.class
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.venv/
-env/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Virtual Environments
 venv/
+env/
+ENV/
+.venv
+
+#chainlit
+.chainlit
+**/.chainlit/*
+chainlit.md
+
+
+# IDEs
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Data (large files - adjust based on repo)
+*.csv
+*.xlsx
+*.json
+*.pkl
+*.h5
+*.hdf5
+*.parquet
+
+# Models (large files)
+*.pt
+*.pth
+*.ckpt
+*.pb
+*.onnx
+*.bin
+*.safetensors
 
 # Environment variables
 .env
-.env.*
+.env.local
 
-# OS files
-.DS_Store
-Thumbs.db
+# Temporary files
+*.tmp
+*.bak
+*.cache
 
-# Logs
-*.log
+# Additional project ignores
+*.files
+
+# Cypress artifacts
+cypress/screenshots
+cypress/videos
+cypress/downloads
 
 # Databases
-*.sqlite
 *.db
 
-# ML artifacts
-models/
-checkpoints/
-wandb/
+# Type checking cache
+.mypy_cache
 
-# Jupyter
-.ipynb_checkpoints/
+# App data directories
+chat_files
+.chroma
 
-# Node (if UI later)
-node_modules/
+# Logs (extended)
+logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Node.js
+node_modules
+.pnpm-store
+dist-ssr
+*.local
+
+# Editor project files
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Aider and coverage
+.aider*
+.coverage
+
+# Backend files
+backend/README.md
+backend/.dmypy.json
+
+# History
+.history
+
