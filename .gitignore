@@ -22,7 +22,7 @@ ENV/
 #chainlit
 .chainlit
 **/.chainlit/*
-chainlit.md
+**/.chainlit.md/*
 
 
 # IDEs
