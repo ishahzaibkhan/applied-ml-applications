@@ -11,7 +11,7 @@ model_llama = "llama-3.1-8b-instant"
 
 
 model = ChatGroq(model_name=model_llama, temperature=1, streaming=True)
-db_conninfo = "postgresql+asyncpg://admin:admin@localhost/my_chainlit_db"
+db_conninfo = "postgresql+asyncpg://ishahzaibkhan:admin@localhost/my_chainlit_db"
 
 
 @cl.set_chat_profiles
@@ -65,7 +65,6 @@ async def main():
         ],
     )
 
-
 @cl.on_chat_resume
 async def on_chat_resume(thread: ThreadDict):
     cl.user_session.set("chat_history", [])
@@ -79,7 +78,6 @@ async def on_chat_resume(thread: ThreadDict):
             cl.user_session.get("chat_history").append(
                 {"role": "assistant", "content": message["output"]}
             )
-
 
 @cl.on_message
 async def on_message(message: cl.Message):
@@ -95,7 +93,6 @@ async def on_message(message: cl.Message):
     cl.user_session.set("chat_history", chat_history)
 
     await cl.Message(response.content).send()
-
 
 @cl.on_stop
 def on_stop():
