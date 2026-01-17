@@ -5,19 +5,19 @@
     "age": 28,
     "gender": "female",
     "height": 1.65,
-    "weight": 90.0,
-    "bmi": 33.06,
-    "verdict": "Obese"
+    "weight": 50.2,
+    "bmi": 18.44,
+    "verdict": "Underweight"
   },
   "P002": {
     "name": "Muhammad Ali",
     "city": "Lahore",
     "age": 35,
     "gender": "male",
-    "height": 1.75,
-    "weight": 85,
-    "bmi": 27.76,
-    "verdict": "Overweight"
+    "height": 1.9,
+    "weight": 85.0,
+    "bmi": 23.55,
+    "verdict": "Normal weight"
   },
   "P003": {
     "name": "Zainab Hussain",

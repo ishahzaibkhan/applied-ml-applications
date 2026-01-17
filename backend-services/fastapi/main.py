@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Path, Query, HTTPException
+from fastapi.responses import JSONResponse
 import json
 from pydantic import BaseModel, Field, computed_field
 from typing import Literal, Optional, Annotated
@@ -32,7 +33,13 @@ class Patient(BaseModel):
     @computed_field
     @property
     def bmi(self) -> float:
-        bmi = self.weight / ((self.height / 100) ** 2)
+        # Check if height is already in meters (< 10) or in centimeters (>= 10)
+        if self.height < 10:
+            # Height is in meters, use directly
+            bmi = self.weight / (self.height ** 2)
+        else:
+            # Height is in centimeters, convert to meters
+            bmi = self.weight / ((self.height / 100) ** 2)
         return round(bmi, 2)
     
     @computed_field
@@ -119,15 +126,36 @@ def create_patient(patient: Patient):
     return {"message": "Patient created successfully"}
 
 
-@app.put("/update/{patient_id}")
-def update_patient(patient_id: str = Path(..., description="ID of the patient to update", example="P001"), updated_patient: Patient = ...):
+@app.put("/edit/{patient_id}")
+def update_patient(patient_id: str, patient_update: UpdatePatient):
     data = data_loader()
-    if patient_id not in data:
-        raise HTTPException(status_code=404, detail="Patient not found")
     
-    data[patient_id] = updated_patient.model_dump(exclude={"id"})
+    # Check if patient exists
+    if patient_id not in data:
+        raise HTTPException(status_code=404, detail="Patient Not Found")
+    
+    # Extract existing patient info
+    existing_patient_info = data[patient_id]
+    
+    # Convert PatientUpdate to dictionary, excluding unset fields
+    updated_patient_info = patient_update.model_dump(exclude_unset=True)
+    
+    # Apply updates to existing info
+    for key, value in updated_patient_info.items():
+        existing_patient_info[key] = value
+    
+    # Re-create Patient object to recalculate BMI and Verdict
+    existing_patient_info['id'] = patient_id
+    patient_pydantic_object = Patient(**existing_patient_info)
+    
+    # Convert back to dictionary, excluding 'id'
+    existing_patient_info = patient_pydantic_object.model_dump(exclude={'id'})
+    
+    # Update and save
+    data[patient_id] = existing_patient_info
     save_data(data)
-    return {"message": "Patient updated successfully"}
+    
+    return JSONResponse(status_code=200, content={"message": "Patient Updated"})
 
 @app.delete("/delete/{patient_id}")
 def delete_patient(patient_id:str = Path(..., description="ID of the patient to delete", example="P001")):
