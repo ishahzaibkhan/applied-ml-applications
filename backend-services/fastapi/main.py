@@ -48,6 +48,14 @@ class Patient(BaseModel):
         else:
             return "Obese"
 
+class UpdatePatient(BaseModel):
+    name: Optional[str] = Field(None)
+    city: Optional[str] = Field(None)
+    age: Optional[int] = Field(None, ge=0)
+    gender: Optional[str] = Field(None)
+    height: Optional[float] = Field(None, gt=0)
+    weight: Optional[float] = Field(None, gt=0)
+
 def data_loader():
     with open("patients.json", "r") as file:
         data = json.load(file)
@@ -110,6 +118,16 @@ def create_patient(patient: Patient):
             json.dump(data, file)
     return {"message": "Patient created successfully"}
 
+
+@app.put("/update/{patient_id}")
+def update_patient(patient_id: str = Path(..., description="ID of the patient to update", example="P001"), updated_patient: Patient = ...):
+    data = data_loader()
+    if patient_id not in data:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    
+    data[patient_id] = updated_patient.model_dump(exclude={"id"})
+    save_data(data)
+    return {"message": "Patient updated successfully"}
 
 @app.delete("/delete/{patient_id}")
 def delete_patient(patient_id:str = Path(..., description="ID of the patient to delete", example="P001")):
