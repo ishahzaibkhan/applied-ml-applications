@@ -46,6 +46,7 @@ Thumbs.db
 *.h5
 *.hdf5
 *.parquet
+*.pdf
 
 # Models (large files)
 *.pt
