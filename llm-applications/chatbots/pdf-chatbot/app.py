@@ -1,7 +1,8 @@
 from langchain_groq import ChatGroq
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
-from typing import Annotated, List
+from typing import List
+import streamlit as st
 import pymupdf
 import re
 
@@ -48,6 +49,12 @@ for i in range(len(filtered_matches)):
     section_content = section_content.replace(section_name, '', 1).strip()
 
     sections[section_name] = section_content
+
+
+st.title("Research Article Reader")
+st.write("This app breaks down a research article into sections and summarizes each section using an LLM.")
+st.file_uploader("Upload a PDF Research Article", type=["pdf"])
+st.button("Summarize Article Sections")
 
 # for key, value in sections.items():
 #     print(f"Section: {key}\n")
