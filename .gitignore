@@ -18,6 +18,7 @@ venv/
 env/
 ENV/
 .venv
+.env
 
 #chainlit
 .chainlit
