@@ -30,9 +30,9 @@ async def chat_profile():
 
 @cl.password_auth_callback
 def auth_callback(username: str, password: str):
-    if (username, password) == ("admin", "admin"):
+    if (username, password) == ("shahzaib", "admin"):
         return cl.User(
-            identifier="admin", metadata={"role": "admin", "provider": "credentials"}
+            identifier="shahzaib", metadata={"role": "admin", "provider": "credentials"}
         )
     else:
         return None

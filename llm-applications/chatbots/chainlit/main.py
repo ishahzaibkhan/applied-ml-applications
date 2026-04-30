@@ -8,4 +8,4 @@ app.title = "Chainlit App"
 def read_main():
     return {"message": "Hello World from main app"}
 
-mount_chainlit(app=app, target="./app.py", path="/chainlit")
+mount_chainlit(app=app, target="./app.py", path="/chat")

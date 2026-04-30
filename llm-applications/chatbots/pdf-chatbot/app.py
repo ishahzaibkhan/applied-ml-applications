@@ -3,6 +3,14 @@ from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 from typing import List
 from langchain.agents import create_agent
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_groq import ChatGroq
+from langchain_classic.chains import RetrievalQA
+from dotenv import load_dotenv
+
 import streamlit as st
 import time
 import pymupdf
@@ -79,25 +87,45 @@ for key, value in sections.items():
     response_dict[key] = response
     print(f"Section: {key}\n")
     print(response["structured_response"])
-    time.sleep(15)  # Add a delay to avoid overwhelming the API
+    time.sleep(15) 
 
-# message = "iran’s Foreign Minister Abbas Araghchi publicly thanked Pakistan’s Prime Minister Shehbaz Sharif and Field Marshal Asim Munir for their “tireless efforts to end the war in the region,” praising Islamabad’s diplomatic push that helped secure a temporary halt to hostili*ties between the United States and Ir@n. Araghchi made the remarks on behalf of Ir@n’s Supreme National Security Council, highlighting Pakistan’s mediation in urging negotiations and responding to calls from both Washington and Tehran as part of the ce@sefire framework. The acknowledgement underscores Pakistan’s growing influence in global diplomacy."
+# RAG
 
-# class Section(BaseModel):
-#     summary: str = Field(..., description="A concise summary of the main ideas presented in the text.")
-#     key_points: List[str] = Field(..., description="A list of the key points or takeaways from the text.")
 
-# str_model = model.with_structured_output(Section)
-# response = str_model.invoke(message)
-# print(response.key_points)
+# Document loading
+file_path = "./article.pdf"
+loader = PyPDFLoader(file_path)
+docs = loader.load()
 
-# # Streamlit App
-# st.title("Scholar Lens")
-# st.write("This app breaks down a research article into sections and summarizes each section using an LLM.")
-# st.file_uploader("Upload a PDF Research Article", type=["pdf"])
-# st.button("Summarize Article Sections")
+# Text splitting
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000,  
+    chunk_overlap=200,  
+    add_start_index=True,  
+)
+all_splits = text_splitter.split_documents(docs)
 
-# menu = ["Home", "Summarized Sections", "All Sections", "Chat with Scholar Lens"]
-# with st.sidebar:
-#     st.write("Menu")
-#     st.radio("Navigate", menu)
+# Embeddings
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+
+vector_store = FAISS.from_documents(all_splits, embeddings)
+
+# Generation
+llm = ChatGroq(model="openai/gpt-oss-120b", temperature=0.0)
+
+# Retrieval
+retriever = vector_store.as_retriever(
+	 search_type="similarity",
+	 search_kwargs={"k": 5}
+	)
+
+qa_chain = RetrievalQA.from_chain_type(
+    llm=llm,
+    retriever=retriever,
+    chain_type="stuff",)
+
+#
+query = "What is shap?"
+response = qa_chain.invoke({"query": query})
+
+print(response["result"])
